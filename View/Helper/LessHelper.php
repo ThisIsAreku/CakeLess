@@ -66,16 +66,17 @@ class LessHelper extends AppHelper {
 				$this->auto_compile_less($source, $target);
 			}
 
-			$url = $this->assetUrl($path, $options + $moreOpts);
+			/*echo $path;
+			$url = $this->assetUrl($path, $options + $moreOpts);*/
 			$options = array_diff_key($options, array('fullBase' => null));
 		}
 
 
 		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
 			$this->Html->script($this->settings['lessjs_url'], array('inline' => false));
-			echo $this->Html->css($url, $rel, $options);
+			echo $this->Html->css($path, $rel, $options + $moreOpts);
 		}else{
-			echo $this->Html->css($url, $rel, $options);
+			echo $this->Html->css($path, $rel, $options + $moreOpts);
 		}
 	}
 
