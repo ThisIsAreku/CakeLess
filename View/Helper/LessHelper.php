@@ -18,7 +18,7 @@ class LessHelper extends AppHelper {
 	public $Less;
 	public $settings = array(
 		'force_debug' => false,
-		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.3.3/less.min.js',
+		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js',
 		'formatter' => 'compressed'
 		);
 
@@ -81,11 +81,11 @@ class LessHelper extends AppHelper {
 	}
 
 	public function auto_compile_less($lessFilename, $cssFilename) {
-		$this->log("Lessc: Initialized ".lessc::$VERSION, 'activite');
-		$this->log("Lessc: checking ".$lessFilename, 'activite');
+		/*$this->log("Lessc: Initialized ".lessc::$VERSION, 'activite');
+		$this->log("Lessc: checking ".$lessFilename, 'activite');*/
 		// Check if cache & output folders are writable and the less file exists.
 		if (!is_writable(dirname($cssFilename))) {
-			$this->log("Lessc: failed, not writable", 'activite');
+			//$this->log("Lessc: failed, not writable", 'activite');
 			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', CACHE.'less'), E_USER_NOTICE);
 			return;
 		}
@@ -95,9 +95,7 @@ class LessHelper extends AppHelper {
 		}
 		try {
 			if($this->Less->checkedCompile($lessFilename, $cssFilename))
-				$this->log("Lessc: success ".$cssFilename, 'activite');
-			else
-				$this->log("Lessc: not required ".$cssFilename, 'activite');
+				$this->log("Lessc: compiled ".$cssFilename, 'activite');
 
 		} catch (exception $e) {
 			$this->log("Lessc: Fatal error: ".$e->getMessage(), 'activite');
