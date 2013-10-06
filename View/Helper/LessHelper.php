@@ -62,12 +62,10 @@ class LessHelper extends AppHelper {
 			if(Configure::read('debug') == 0) {
 				$source = LESS.$path.'.less';
 				$target = CSS.$path.'.css';
-				//echo $target;
+
 				$this->auto_compile_less($source, $target);
 			}
 
-			/*echo $path;
-			$url = $this->assetUrl($path, $options + $moreOpts);*/
 			$options = array_diff_key($options, array('fullBase' => null));
 		}
 
@@ -81,15 +79,14 @@ class LessHelper extends AppHelper {
 	}
 
 	public function auto_compile_less($lessFilename, $cssFilename) {
-		/*$this->log("Lessc: Initialized ".lessc::$VERSION, 'activite');
-		$this->log("Lessc: checking ".$lessFilename, 'activite');*/
 		// Check if cache & output folders are writable and the less file exists.
 		if (!is_writable(dirname($cssFilename))) {
-			//$this->log("Lessc: failed, not writable", 'activite');
-			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', CACHE.'less'), E_USER_NOTICE);
+			$this->log("Lessc: failed, not writable: ".$cssFilename, 'activite');
+			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', $cssFilename), E_USER_NOTICE);
 			return;
 		}
 		if (!file_exists($lessFilename)) {
+			$this->log("Lessc: failed, file not found: ".$lessFilename, 'activite');
 			trigger_error(__d('cake_dev', 'File: "%s" not found.', $lessFilename), E_USER_NOTICE);
 			return;
 		}
@@ -100,27 +97,6 @@ class LessHelper extends AppHelper {
 		} catch (exception $e) {
 			$this->log("Lessc: Fatal error: ".$e->getMessage(), 'activite');
 		}
-
-		// Load the cache
-		/*$cache = file_exists($cssFilename) ? filemtime($cssFilename) : 0;
-		$file = filemtime($lessFilename);
-
-		if ($file > $cache) {
-			$this->log("Lessc: ".$lessFilename, 'activite');
-			$new_cache = $this->Less->compileFile($lessFilename);
-			$cssFile = new File($cssFilename, true);
-			if ($cssFile->write($new_cache) === false) {
-				if (!is_writable(dirname($cssFilename))) {
-					$this->log("Lessc: failed, not writable", 'activite');
-					//trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', dirname($cssFilename)), E_USER_NOTICE);
-					return;
-				}
-				$this->log("Lessc: failed", 'activite');
-				//trigger_error(__d('cake_dev', 'Failed to write "%s"', $cssFilename), E_USER_NOTICE);
-				return;
-			}
-			$this->log("Lessc: success ".$cssFilename, 'activite');
-		}*/
 	}
 
 	public function beforeLayout($layoutFile) {
