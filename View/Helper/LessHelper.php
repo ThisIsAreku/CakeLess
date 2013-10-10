@@ -106,7 +106,6 @@ class LessHelper extends AppHelper {
 			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', $lessgen), E_USER_NOTICE);
 			return;
 		}
-		$this->log("Lessc: generating custom.less", 'activite');
 		$lessVars = Configure::read('Less');
 		if(!is_array($lessVars))
 			return;
