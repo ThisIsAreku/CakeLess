@@ -80,6 +80,10 @@ class LessHelper extends AppHelper {
 
 	public function auto_compile_less($lessFilename, $cssFilename) {
 		// Check if cache & output folders are writable and the less file exists.
+		if (!file_exists(dirname($cssFilename))) {
+			$this->log("Lessc: creating dir for ".$cssFilename, 'activite');
+			mkdir(dirname($cssFilename), 0777, true);
+		}
 		if (!is_writable(dirname($cssFilename))) {
 			$this->log("Lessc: failed, not writable: ".$cssFilename, 'activite');
 			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', $cssFilename), E_USER_NOTICE);
