@@ -18,7 +18,7 @@ class LessHelper extends AppHelper {
 	public $Less;
 	public $settings = array(
 		'force_debug' => false,
-		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js',
+		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.5.0/less.min.js',
 		'formatter' => 'compressed',
 		'custom_less' => 'gen'.DS.'custom.less'
 		);
