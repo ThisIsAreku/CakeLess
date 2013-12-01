@@ -20,7 +20,7 @@ class LessHelper extends AppHelper {
 		'force_debug' => false,
 		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.5.0/less.min.js',
 		'formatter' => 'compressed',
-		'custom_less' => 'gen'.DS.'custom.less'
+		'custom_less_dir' => 'gen'
 		);
 
 	public function __construct(View $View, $settings = array()) {
@@ -105,19 +105,21 @@ class LessHelper extends AppHelper {
 	}
 
 	public function beforeLayout($layoutFile) {
-		$lessFile = $this->settings['custom_less'];
-		if (!is_writable($lessFile)) {
-			trigger_error(__d('cake_dev', '"%s" is NOT writable.', $lessFile), E_USER_NOTICE);
+		$lessDir = LESS.$this->settings['custom_less_dir'];
+		$lessFile = $lessDir.DS.'custom.less';
+		if (!is_writable($lessDir)) {
+			trigger_error(__d('cake_dev', '"%s" is NOT writable.', $lessDir), E_USER_NOTICE);
 			return;
 		}
 		$lessVars = Configure::read('Less');
-		if(!is_array($lessVars))
-			return;
+		/*if(!is_array($lessVars))
+			return;*/
 
 		$content = '// LESS generated variables from Configure'.PHP_EOL.'// Generated on '.date('Y-m-d H:i:s').PHP_EOL;
-		foreach($lessVars as $key => $value){
-			$content .= '@'.$key.': '.$value.';'.PHP_EOL;
-		}
+		if(is_array($lessVars))
+			foreach($lessVars as $key => $value){
+				$content .= '@'.$key.': '.$value.';'.PHP_EOL;
+			}
 		$lessFileW = new File($lessFile, true);
 		if ($lessFileW->write($content) === false) {
 			if (!is_writable(dirname($lessFile))) {
