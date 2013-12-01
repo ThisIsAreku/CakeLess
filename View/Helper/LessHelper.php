@@ -114,7 +114,7 @@ class LessHelper extends AppHelper {
 		if(!is_array($lessVars))
 			return;
 
-		$content = '';
+		$content = '// LESS generated variables from Configure'.PHP_EOL.'// Generated on '.date('Y-m-d H:i:s').PHP_EOL;
 		foreach($lessVars as $key => $value){
 			$content .= '@'.$key.': '.$value.';'.PHP_EOL;
 		}
