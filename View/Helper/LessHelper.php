@@ -19,7 +19,8 @@ class LessHelper extends AppHelper {
 	public $settings = array(
 		'force_debug' => false,
 		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js',
-		'formatter' => 'compressed'
+		'formatter' => 'compressed',
+		'custom_less' => 'gen'.DS.'custom.less'
 		);
 
 	public function __construct(View $View, $settings = array()) {
@@ -104,10 +105,9 @@ class LessHelper extends AppHelper {
 	}
 
 	public function beforeLayout($layoutFile) {
-		$lessgen = LESS.'gen';
-		$lessFile = $lessgen.DS.'custom.less';
-		if (!is_writable($lessgen)) {
-			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', $lessgen), E_USER_NOTICE);
+		$lessFile = $this->settings['custom_less'];
+		if (!is_writable($lessFile)) {
+			trigger_error(__d('cake_dev', '"%s" is NOT writable.', $lessFile), E_USER_NOTICE);
 			return;
 		}
 		$lessVars = Configure::read('Less');
