@@ -43,7 +43,7 @@ class LessHelper extends AppHelper {
 			$moreOpts = array('pathPrefix' => LESS_URL, 'ext' => '.less', 'fullBase' => true);
 		}else{
 			$rel = 'stylesheet';
-			$moreOpts = array('pathPrefix' => CSS_URL, 'ext' => '.css', 'fullBase' => false);
+			$moreOpts = array();
 		}
 
 		if (is_array($path)) {
@@ -73,9 +73,9 @@ class LessHelper extends AppHelper {
 
 		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
 			$this->Html->script($this->settings['lessjs_url'], array('inline' => false));
-			echo $this->Html->css($path, $rel, $options + $moreOpts);
+			echo $this->Html->css($path, $rel, $moreOpts + $options);
 		}else{
-			echo $this->Html->css($path, $rel, $options + $moreOpts);
+			echo $this->Html->css($path, $rel, $moreOpts + $options);
 		}
 	}
 
