@@ -39,11 +39,9 @@ class LessHelper extends AppHelper {
 	public function css($path, $options = array()) {
 		$moreOpts = array();
 		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
-			$rel = 'stylesheet/less';
-			$moreOpts = array('pathPrefix' => LESS_URL, 'ext' => '.less', 'fullBase' => true);
+			$moreOpts = array('rel' => 'stylesheet/less', 'pathPrefix' => LESS_URL, 'ext' => '.less', 'fullBase' => true);
 		}else{
-			$rel = 'stylesheet';
-			$moreOpts = array();
+			$moreOpts = array('rel' => 'stylesheet');
 		}
 
 		if (is_array($path)) {
@@ -67,15 +65,15 @@ class LessHelper extends AppHelper {
 				$this->auto_compile_less($source, $target);
 			}
 
-			$options = array_diff_key($options, array('fullBase' => null));
+			unset($options['fullBase']);
 		}
 
 
 		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
 			$this->Html->script($this->settings['lessjs_url'], array('inline' => false));
-			echo $this->Html->css($path, $rel, $moreOpts + $options);
+			return $this->Html->css($path, $moreOpts + $options);
 		}else{
-			echo $this->Html->css($path, $rel, $moreOpts + $options);
+			return $this->Html->css($path, $moreOpts + $options);
 		}
 	}
 
