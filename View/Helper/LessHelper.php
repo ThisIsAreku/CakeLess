@@ -1,24 +1,24 @@
 <?php
-App::uses('AppHelper', 'View/Helper');
+App::uses('HtmlHelper', 'View/Helper');
 
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
 App::uses('Component', 'Controller');
 if(!App::import('Vendor', 'Less.Lessc',
   array(
-    'file' => 'lessphp' . DS . 'lessc.inc.php'
+	'file' => 'lessphp' . DS . 'lessc.inc.php'
   )
 )){
 	trigger_error('Class not found', E_USER_ERROR);
 	return;
 }
-class LessHelper extends AppHelper {
+class LessHelper extends HtmlHelper {
 
 	public $helpers = array('Html');
 	public $Less;
 	public $settings = array(
 		'force_debug' => false,
-		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.6.1/less.min.js',
+		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.6.2/less.min.js',
 		'formatter' => 'compressed',
 		'custom_less_dir' => 'gen'
 		);
@@ -37,13 +37,7 @@ class LessHelper extends AppHelper {
 	}
 	
 	public function css($path, $options = array()) {
-		$moreOpts = array();
-		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
-			$moreOpts = array('rel' => 'stylesheet/less', 'pathPrefix' => LESS_URL, 'ext' => '.less', 'fullBase' => true);
-		}else{
-			$moreOpts = array('rel' => 'stylesheet');
-		}
-
+		$doLessDisplay = (Configure::read('debug') > 0)||$this->settings['force_debug'];
 		if (is_array($path)) {
 			$out = '';
 			foreach ($path as $i) {
@@ -58,22 +52,30 @@ class LessHelper extends AppHelper {
 		if (strpos($path, '//') !== false) {
 			$url = $path;
 		} else {
-			if(Configure::read('debug') == 0) {
+			if($doLessDisplay) {
+				$url = $this->assetUrl($path, array('pathPrefix' => LESS_URL, 'ext' => '.less') + $options);
+				$options = array_diff_key($options, array('fullBase' => null, 'pathPrefix' => null));
+			}else{
 				$source = LESS.$path.'.less';
 				$target = CSS.$path.'.css';
 
-				$this->auto_compile_less($source, $target);
+				$this->auto_compile_less($source, $target);	
 			}
-
-			unset($options['fullBase']);
 		}
-
-
-		if((Configure::read('debug') > 0)||$this->settings['force_debug']) {
+		if($doLessDisplay) {
 			$this->Html->script($this->settings['lessjs_url'], array('inline' => false));
-			return $this->Html->css($path, $moreOpts + $options);
+			$out = sprintf(
+				$this->_tags['css'],
+				'stylesheet/less',
+				$url,
+				$this->_parseAttributes($options, array('rel', 'block'), '', ' ')
+			);
+			if (empty($options['block'])) {
+				return $out;
+			}
+			$this->_View->append($options['block'], $out);
 		}else{
-			return $this->Html->css($path, $moreOpts + $options);
+			return $this->Html->css($path, $options);
 		}
 	}
 
