@@ -18,7 +18,7 @@ class LessHelper extends HtmlHelper {
 	public $Less;
 	public $settings = array(
 		'force_debug' => false,
-		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.1/less.min.js',
+		'lessjs_url' => '//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.4/less.min.js',
 		'formatter' => 'compressed',
 		'custom_less_dir' => 'gen'
 		);
